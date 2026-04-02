@@ -686,16 +686,16 @@
 
             <div class="flex items-center gap-2">
               <button
-                id="splitBtn"
+                id="addToSplitsBtn"
                 class="px-3 py-1.5 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-all hidden"
               >
-                Split Selected
+                Add to Splits
               </button>
               <button
-                id="reportBtn"
-                class="px-3 py-1.5 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-all"
+                id="viewReportBtn"
+                class="px-3 py-1.5 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-all hidden"
               >
-                Generate Report
+                View Split Report
               </button>
               <!-- Sort Options -->
               <span class="text-sm text-gray-500">Sort:</span>
@@ -797,7 +797,7 @@
       </div>
     </main>
 
-    <!-- Split Expense Modal -->
+    <!-- Add To Split Modal -->
     <div
       id="splitModal"
       class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
@@ -806,101 +806,113 @@
         class="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-900">Split Expense</h3>
-          <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+          <h3 class="text-lg font-semibold text-gray-900">Add Split</h3>
+          <button id="closeSplitModalBtn" class="text-gray-400 hover:text-gray-600">
             <span class="material-icons-outlined">close</span>
           </button>
         </div>
         <form id="splitForm">
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1"
-                >Expense Name</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1">Split Name</label>
               <input
                 type="text"
-                id="expenseName"
+                id="splitName"
                 required
+                placeholder="e.g., Goa Trip Food"
                 class="w-full border border-gray-200 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1"
-                >People Involved (comma separated)</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-1">Split Members (comma separated)</label>
               <input
                 type="text"
-                id="people"
+                id="splitMembers"
+                required
                 placeholder="e.g., Alice, Bob, Charlie"
-                required
                 class="w-full border border-gray-200 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              <div id="masterMemberChips" class="mt-2 flex flex-wrap gap-2"></div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Selected Transactions</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-2">Selected Transactions</label>
               <div
-                id="transactionList"
+                id="splitTransactionList"
                 class="bg-gray-50 rounded-xl p-4 space-y-2 max-h-40 overflow-y-auto"
               ></div>
+              <div class="mt-3 text-sm font-semibold text-gray-800">
+                Total: ₹<span id="splitSelectedTotal">0</span>
+              </div>
             </div>
             <button
               type="submit"
               class="w-full bg-blue-500 text-white py-3 rounded-xl font-medium hover:bg-blue-600 transition-all"
             >
-              Save Expense
+              Save Split
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Report Section -->
+    <!-- Split Report -->
     <div
-      id="reportSection"
+      id="splitReportSection"
       class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
     >
       <div
         class="bg-white rounded-xl sm:rounded-2xl shadow-md border border-gray-100 overflow-hidden"
       >
-        <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
+        <div
+          class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+        >
           <div class="flex items-center gap-2">
-            <span class="material-icons-outlined text-purple-500"
-              >assessment</span
+            <span class="material-icons-outlined text-purple-500">assessment</span>
+            <h2 class="font-semibold text-gray-900">Split Report</h2>
+          </div>
+          <div class="flex gap-2">
+            <button
+              id="shareWhatsAppBtn"
+              class="px-3 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-all"
             >
-            <h2 class="font-semibold text-gray-900">Expense Report</h2>
+              Share to WhatsApp
+            </button>
+            <button
+              id="clearSplitsBtn"
+              class="px-3 py-1.5 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-all"
+            >
+              Clear All Splits
+            </button>
           </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-purple-50">
-              <tr>
-                <th
-                  class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Expense Name
-                </th>
-                <th
-                  class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Transaction Details
-                </th>
-                <th
-                  class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Owes
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              id="reportTableBody"
-              class="divide-y divide-gray-100"
-            ></tbody>
-          </table>
+        <div class="p-4 sm:p-6 border-b border-gray-100">
+          <h3 class="font-medium text-gray-900 mb-3">Who Owes How Much</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-purple-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Member</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Owes</th>
+                </tr>
+              </thead>
+              <tbody id="splitSummaryBody" class="divide-y divide-gray-100"></tbody>
+            </table>
+          </div>
         </div>
-        <div id="reportEmpty" class="py-12 text-center">
-          <p class="text-gray-500">No expenses to report</p>
+        <div class="p-4 sm:p-6">
+          <h3 class="font-medium text-gray-900 mb-3">Saved Splits</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Split</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Members</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                </tr>
+              </thead>
+              <tbody id="savedSplitsBody" class="divide-y divide-gray-100"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -927,7 +939,10 @@
       let nameChart;
       let topDatesChart;
       let lastFiltered = [];
-      let expenses = [];
+      let savedSplits = [];
+      let masterMembers = [];
+      let pendingSplitTransactions = [];
+      const SPLITS_STORAGE_KEY = "gpay_saved_splits_v1";
 
       // Initialize date picker
       document.addEventListener("DOMContentLoaded", () => {
@@ -946,180 +961,9 @@
         document
           .getElementById("topDateMode")
           .addEventListener("change", updateTopDates);
-
-        // Select all checkbox
-        document.getElementById("selectAll").addEventListener("change", (e) => {
-          const checkboxes = document.querySelectorAll(".transaction-checkbox");
-          checkboxes.forEach((cb) => (cb.checked = e.target.checked));
-          updateSplitButton();
-        });
-
-        // Individual checkboxes
-        document.addEventListener("change", (e) => {
-          if (e.target.classList.contains("transaction-checkbox")) {
-            updateSplitButton();
-            const selectAll = document.getElementById("selectAll");
-            const checkboxes = document.querySelectorAll(
-              ".transaction-checkbox"
-            );
-            const checkedBoxes = document.querySelectorAll(
-              ".transaction-checkbox:checked"
-            );
-            selectAll.checked =
-              checkboxes.length === checkedBoxes.length &&
-              checkboxes.length > 0;
-            selectAll.indeterminate =
-              checkedBoxes.length > 0 &&
-              checkedBoxes.length < checkboxes.length;
-          }
-        });
-
-        // Split button
-        document.getElementById("splitBtn").addEventListener("click", () => {
-          const selectedIds = Array.from(
-            document.querySelectorAll(".transaction-checkbox:checked")
-          ).map((cb) => parseInt(cb.value));
-          const selected = transactions.filter((tx) =>
-            selectedIds.includes(tx.id)
-          );
-          if (selected.length === 0) return;
-
-          document.getElementById("splitModal").classList.remove("hidden");
-          document.getElementById("transactionList").innerHTML = selected
-            .map(
-              (tx) =>
-                `<div class="bg-white p-3 rounded-lg border">${
-                  tx.name
-                } - ${tx.date.toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "short",
-                })} - ₹${tx.amount.toLocaleString("en-IN")}</div>`
-            )
-            .join("");
-        });
-
-        // Close modal
-        document.getElementById("closeModal").addEventListener("click", () => {
-          document.getElementById("splitModal").classList.add("hidden");
-          document.getElementById("splitForm").reset();
-        });
-
-        // Split form submit
-        document.getElementById("splitForm").addEventListener("submit", (e) => {
-          e.preventDefault();
-          const expenseName = document
-            .getElementById("expenseName")
-            .value.trim();
-          const peopleStr = document.getElementById("people").value.trim();
-          const people = peopleStr
-            .split(",")
-            .map((p) => p.trim())
-            .filter((p) => p);
-          if (!expenseName || !people.length) return;
-
-          const selectedIds = Array.from(
-            document.querySelectorAll(".transaction-checkbox:checked")
-          ).map((cb) => parseInt(cb.value));
-          console.log("Selected checkbox elements:", document.querySelectorAll(".transaction-checkbox:checked"));
-          console.log("Selected IDs:", selectedIds);
-          console.log("All transactions:", transactions.map(tx => ({id: tx.id, name: tx.name})));
-          const selected = transactions.filter((tx) =>
-            selectedIds.includes(tx.id)
-          );
-          console.log("Selected transactions:", selected);
-          const total = selected.reduce((s, tx) => s + tx.amount, 0);
-          const eachOwes = total / people.length;
-          const splits = people.map((person) => ({ person, owes: eachOwes }));
-
-          const expense = {
-            name: expenseName,
-            transactions: selected,
-            total,
-            people,
-            splits,
-          };
-          console.log("Creating expense:", expense);
-          expenses.push(expense);
-          console.log("Expenses array now has", expenses.length, "items");
-
-          document.getElementById("splitModal").classList.add("hidden");
-          document.getElementById("splitForm").reset();
-          document
-            .querySelectorAll(".transaction-checkbox")
-            .forEach((cb) => (cb.checked = false));
-          document.getElementById("selectAll").checked = false;
-          updateSplitButton();
-          updateReportButton();
-        });
-
-        // Report button
-        document.getElementById("reportBtn").addEventListener("click", () => {
-          console.log("Report button clicked, expenses:", expenses);
-          const tbody = document.getElementById("reportTableBody");
-          tbody.innerHTML = "";
-          if (expenses.length === 0) {
-            console.log("No expenses to report");
-            document.getElementById("reportEmpty").classList.remove("hidden");
-            return;
-          }
-          console.log("Generating report for", expenses.length, "expenses");
-          document.getElementById("reportEmpty").classList.add("hidden");
-          expenses.forEach((exp, expIndex) => {
-            console.log(
-              "Processing expense",
-              expIndex,
-              ":",
-              exp.name,
-              "with transactions:",
-              exp.transactions
-            );
-            if (!exp.transactions || exp.transactions.length === 0) {
-              console.log("No transactions in expense", exp.name);
-              return;
-            }
-            exp.transactions.forEach((tx, txIndex) => {
-              console.log(
-                "Processing transaction",
-                txIndex,
-                ":",
-                tx.name,
-                tx.amount
-              );
-              tbody.insertAdjacentHTML(
-                "beforeend",
-                `
-                <tr class="table-row">
-                  <td class="px-6 py-4">
-                    <div class="text-sm font-medium text-gray-900">${
-                      exp.name
-                    }</div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="text-sm text-gray-600">${
-                      tx.name
-                    } - ${tx.date.toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })} - ₹${tx.amount.toLocaleString("en-IN")}</div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="text-sm text-gray-600">${exp.splits
-                      .map((s) => `${s.person}: ₹${s.owes.toFixed(2)}`)
-                      .join(", ")}</div>
-                  </td>
-                </tr>
-              `
-              );
-            });
-          });
-          document.getElementById("reportSection").classList.remove("hidden");
-          console.log("Report section shown");
-          // Scroll to report section
-          document
-            .getElementById("reportSection")
-            .scrollIntoView({ behavior: "smooth" });
-        });
+        loadSplitsFromStorage();
+        bindSplitEvents();
+        updateSplitButtons();
       });
 
       // Drag and drop
@@ -1361,8 +1205,295 @@
         lastFiltered = filtered;
         updateCharts(filtered);
         updateTopDates(filtered);
-        updateSplitButton();
-        updateReportButton();
+        updateSplitButtons();
+      }
+
+      function bindSplitEvents() {
+        document
+          .getElementById("selectAll")
+          .addEventListener("change", handleSelectAllChange);
+        document.addEventListener("change", handleTransactionCheckboxChange);
+        document
+          .getElementById("addToSplitsBtn")
+          .addEventListener("click", openSplitModalFromSelection);
+        document
+          .getElementById("closeSplitModalBtn")
+          .addEventListener("click", closeSplitModal);
+        document
+          .getElementById("splitForm")
+          .addEventListener("submit", saveSplitFromModal);
+        document
+          .getElementById("viewReportBtn")
+          .addEventListener("click", showSplitReport);
+        document
+          .getElementById("shareWhatsAppBtn")
+          .addEventListener("click", shareOnWhatsApp);
+        document
+          .getElementById("clearSplitsBtn")
+          .addEventListener("click", clearAllSplits);
+      }
+
+      function handleSelectAllChange(e) {
+        const checkboxes = document.querySelectorAll(".transaction-checkbox");
+        checkboxes.forEach((cb) => {
+          cb.checked = e.target.checked;
+        });
+        updateSplitButtons();
+      }
+
+      function handleTransactionCheckboxChange(e) {
+        if (!e.target.classList.contains("transaction-checkbox")) return;
+        const selectAll = document.getElementById("selectAll");
+        const checkboxes = document.querySelectorAll(".transaction-checkbox");
+        const checked = document.querySelectorAll(".transaction-checkbox:checked");
+        selectAll.checked = checkboxes.length > 0 && checked.length === checkboxes.length;
+        selectAll.indeterminate = checked.length > 0 && checked.length < checkboxes.length;
+        updateSplitButtons();
+      }
+
+      function getSelectedTransactions() {
+        const selectedIds = Array.from(
+          document.querySelectorAll(".transaction-checkbox:checked")
+        ).map((cb) => parseInt(cb.value, 10));
+        return transactions.filter((tx) => selectedIds.includes(tx.id));
+      }
+
+      function openSplitModalFromSelection() {
+        const selected = getSelectedTransactions();
+        if (!selected.length) return;
+        pendingSplitTransactions = selected;
+        document.getElementById("splitName").value = "";
+        document.getElementById("splitMembers").value = masterMembers.join(", ");
+        renderMasterMemberChips();
+        renderPendingSplitTransactions();
+        document.getElementById("splitModal").classList.remove("hidden");
+      }
+
+      function closeSplitModal() {
+        document.getElementById("splitModal").classList.add("hidden");
+        document.getElementById("splitForm").reset();
+        pendingSplitTransactions = [];
+      }
+
+      function renderMasterMemberChips() {
+        const chipWrap = document.getElementById("masterMemberChips");
+        chipWrap.innerHTML = "";
+        if (!masterMembers.length) return;
+
+        masterMembers.forEach((member) => {
+          chipWrap.insertAdjacentHTML(
+            "beforeend",
+            `<button type="button" class="master-member-chip px-2 py-1 text-xs rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700" data-member="${member}">${member}</button>`
+          );
+        });
+
+        chipWrap.querySelectorAll(".master-member-chip").forEach((chip) => {
+          chip.addEventListener("click", () => {
+            const member = chip.dataset.member;
+            const input = document.getElementById("splitMembers");
+            const current = input.value
+              .split(",")
+              .map((name) => name.trim())
+              .filter((name) => name);
+            if (!current.includes(member)) current.push(member);
+            input.value = current.join(", ");
+          });
+        });
+      }
+
+      function renderPendingSplitTransactions() {
+        const list = document.getElementById("splitTransactionList");
+        list.innerHTML = pendingSplitTransactions
+          .map(
+            (tx) =>
+              `<div class="bg-white p-3 rounded-lg border">${tx.name} - ${tx.date.toLocaleDateString(
+                "en-IN",
+                { day: "numeric", month: "short" }
+              )} - ₹${tx.amount.toLocaleString("en-IN")}</div>`
+          )
+          .join("");
+
+        const total = pendingSplitTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+        document.getElementById("splitSelectedTotal").textContent =
+          total.toLocaleString("en-IN", { minimumFractionDigits: 2 });
+      }
+
+      function saveSplitFromModal(e) {
+        e.preventDefault();
+        const splitName = document.getElementById("splitName").value.trim();
+        const memberList = document
+          .getElementById("splitMembers")
+          .value.split(",")
+          .map((m) => m.trim())
+          .filter((m) => m);
+        const uniqueMembers = [...new Set(memberList)];
+        if (!splitName || !uniqueMembers.length || !pendingSplitTransactions.length) {
+          return;
+        }
+
+        const total = pendingSplitTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+        const perMember = total / uniqueMembers.length;
+        const split = {
+          id: Date.now(),
+          name: splitName,
+          members: uniqueMembers,
+          transactions: pendingSplitTransactions.map((tx) => tx.id),
+          total,
+          createdAt: new Date().toISOString(),
+          owes: uniqueMembers.map((name) => ({ name, amount: perMember })),
+        };
+
+        savedSplits.push(split);
+        masterMembers = [...new Set([...masterMembers, ...uniqueMembers])];
+        saveSplitsToStorage();
+        closeSplitModal();
+        clearSelection();
+        renderSplitReport();
+        updateSplitButtons();
+      }
+
+      function saveSplitsToStorage() {
+        localStorage.setItem(
+          SPLITS_STORAGE_KEY,
+          JSON.stringify({ savedSplits, masterMembers })
+        );
+      }
+
+      function loadSplitsFromStorage() {
+        try {
+          const raw = localStorage.getItem(SPLITS_STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          savedSplits = Array.isArray(parsed.savedSplits) ? parsed.savedSplits : [];
+          masterMembers = Array.isArray(parsed.masterMembers)
+            ? parsed.masterMembers
+            : [];
+          renderSplitReport();
+        } catch (error) {
+          savedSplits = [];
+          masterMembers = [];
+        }
+      }
+
+      function clearSelection() {
+        document
+          .querySelectorAll(".transaction-checkbox")
+          .forEach((cb) => (cb.checked = false));
+        const selectAll = document.getElementById("selectAll");
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+      }
+
+      function updateSplitButtons() {
+        const checked = document.querySelectorAll(".transaction-checkbox:checked");
+        document
+          .getElementById("addToSplitsBtn")
+          .classList.toggle("hidden", checked.length === 0);
+        document
+          .getElementById("viewReportBtn")
+          .classList.toggle("hidden", savedSplits.length === 0);
+      }
+
+      function renderSplitReport() {
+        const summaryBody = document.getElementById("splitSummaryBody");
+        const splitsBody = document.getElementById("savedSplitsBody");
+        summaryBody.innerHTML = "";
+        splitsBody.innerHTML = "";
+
+        const owedMap = {};
+        savedSplits.forEach((split) => {
+          split.owes.forEach((entry) => {
+            owedMap[entry.name] = (owedMap[entry.name] || 0) + entry.amount;
+          });
+        });
+
+        Object.entries(owedMap)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([member, amount]) => {
+            summaryBody.insertAdjacentHTML(
+              "beforeend",
+              `<tr><td class="px-4 py-3 text-sm text-gray-800">${member}</td><td class="px-4 py-3 text-sm text-right font-semibold text-gray-900">₹${amount.toLocaleString(
+                "en-IN",
+                { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+              )}</td></tr>`
+            );
+          });
+
+        savedSplits.forEach((split) => {
+          splitsBody.insertAdjacentHTML(
+            "beforeend",
+            `<tr><td class="px-4 py-3 text-sm text-gray-800">${
+              split.name
+            }</td><td class="px-4 py-3 text-sm text-gray-600">${split.members.join(
+              ", "
+            )}</td><td class="px-4 py-3 text-sm text-right font-semibold text-gray-900">₹${Number(
+              split.total
+            ).toLocaleString("en-IN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}</td></tr>`
+          );
+        });
+
+        const hasSplits = savedSplits.length > 0;
+        document.getElementById("splitReportSection").classList.toggle("hidden", !hasSplits);
+      }
+
+      function showSplitReport() {
+        renderSplitReport();
+        document
+          .getElementById("splitReportSection")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function buildWhatsAppText() {
+        if (!savedSplits.length) return "No split data available.";
+        const owedMap = {};
+        savedSplits.forEach((split) => {
+          split.owes.forEach((entry) => {
+            owedMap[entry.name] = (owedMap[entry.name] || 0) + entry.amount;
+          });
+        });
+
+        const lines = [
+          "*Split Report*",
+          "",
+          "*Who owes how much:*",
+          ...Object.entries(owedMap)
+            .sort((a, b) => b[1] - a[1])
+            .map(
+              ([name, amount]) =>
+                `- ${name}: ₹${amount.toLocaleString("en-IN", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`
+            ),
+          "",
+          "*Splits:*",
+          ...savedSplits.map(
+            (split) =>
+              `- ${split.name} (${split.members.length} members): ₹${Number(
+                split.total
+              ).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`
+          ),
+        ];
+        return lines.join("\n");
+      }
+
+      function shareOnWhatsApp() {
+        const text = buildWhatsAppText();
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+      }
+
+      function clearAllSplits() {
+        savedSplits = [];
+        masterMembers = [];
+        saveSplitsToStorage();
+        renderSplitReport();
+        updateSplitButtons();
       }
 
       function updateCharts(
@@ -1728,9 +1859,8 @@
       // Clear button
       document.getElementById("clearBtn").addEventListener("click", () => {
         transactions = [];
-        expenses = [];
         document.getElementById("resultsSection").classList.add("hidden");
-        document.getElementById("reportSection").classList.add("hidden");
+        document.getElementById("splitReportSection").classList.add("hidden");
         document.getElementById("uploadSection").classList.remove("hidden");
         document.getElementById("clearBtn").classList.add("hidden");
         document.getElementById("pdfInput").value = "";
@@ -1738,30 +1868,9 @@
         if (pieChart) pieChart.destroy();
         if (nameChart) nameChart.destroy();
         if (topDatesChart) topDatesChart.destroy();
-        updateSplitButton();
-        updateReportButton();
+        clearSelection();
+        updateSplitButtons();
       });
-
-      function updateSplitButton() {
-        const checkedBoxes = document.querySelectorAll(
-          ".transaction-checkbox:checked"
-        );
-        const btn = document.getElementById("splitBtn");
-        if (checkedBoxes.length > 0) {
-          btn.classList.remove("hidden");
-        } else {
-          btn.classList.add("hidden");
-        }
-      }
-
-      function updateReportButton() {
-        const btn = document.getElementById("reportBtn");
-        if (expenses.length > 0) {
-          btn.classList.remove("hidden");
-        } else {
-          btn.classList.add("hidden");
-        }
-      }
 
       document
         .querySelectorAll("input:not([readonly])")
